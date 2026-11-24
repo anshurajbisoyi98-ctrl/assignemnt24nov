@@ -10,6 +10,24 @@ function Listings({
   applyForJob,
   withdrawApplication,
 }) {
+  let jobListContent = null
+  if (jobs.length > 0) {
+    jobListContent = (
+      <div className="job-grid">
+        {jobs.map((job) => (
+          <JobCard
+            key={job.id}
+            job={job}
+            onApply={applyForJob}
+            onWithdraw={withdrawApplication}
+          />
+        ))}
+      </div>
+    )
+  } else {
+    jobListContent = <p className="empty-state">No jobs match your search.</p>
+  }
+
   return (
     <main className="page">
       <div className="page-heading">
@@ -28,45 +46,26 @@ function Listings({
           onChange={(event) => setSearch(event.target.value)}
         />
         <div className="filter-buttons" aria-label="Filter by work mode">
-          {['All', 'Remote', 'Onsite', 'Hybrid'].map((mode) => (
-            (() => {
-              let buttonClass = 'filter'
-              if (modeFilter === mode) {
-                buttonClass = 'filter active'
-              }
+          {['All', 'Remote', 'Onsite', 'Hybrid'].map((mode) => {
+            let buttonClass = 'filter'
+            if (modeFilter === mode) {
+              buttonClass = 'filter active'
+            }
 
-              return (
-                <button
-                  key={mode}
-                  className={buttonClass}
-                  type="button"
-                  onClick={() => setModeFilter(mode)}
-                >
-                  {mode}
-                </button>
-              )
-            })()
-          ))}
+            return (
+              <button
+                key={mode}
+                className={buttonClass}
+                type="button"
+                onClick={() => setModeFilter(mode)}
+              >
+                {mode}
+              </button>
+            )
+          })}
         </div>
       </div>
-      {(() => {
-        if (jobs.length > 0) {
-          return (
-            <div className="job-grid">
-              {jobs.map((job) => (
-                <JobCard
-                  key={job.id}
-                  job={job}
-                  onApply={applyForJob}
-                  onWithdraw={withdrawApplication}
-                />
-              ))}
-            </div>
-          )
-        } else {
-          return <p className="empty-state">No jobs match your search.</p>
-        }
-      })()}
+      {jobListContent}
     </main>
   )
 }
